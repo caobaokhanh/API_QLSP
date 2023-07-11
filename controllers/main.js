@@ -10,6 +10,16 @@ function getProducts() {
     });
 }
 
+function apiGetProducts(searchValue) {
+  return axios({
+    url: `https://64a6ad25096b3f0fcc8043ec.mockapi.io/products`,
+    method: "GET",
+    params: {
+      name: searchValue || undefined,
+    },
+  });
+}
+
 // Hiển thị sản phẩm
 function display(products) {
   let html = products.reduce((result, value, index) => {
@@ -156,6 +166,20 @@ getElement("#btnThemSP").onclick = () => {
     <button class="btn btn-secondary" data-dismiss="modal">Hủy</button>
     <button class="btn btn-success" onclick="createProduct()">Thêm</button>
   `;
+};
+
+getElement("#txtSearch").onkeypress = (event) => {
+  if (event.key !== "Enter") {
+    return;
+  }
+
+  apiGetProducts(event.target.value)
+    .then((response) => {
+      display(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 // ===== Utils =====
